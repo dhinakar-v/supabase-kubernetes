@@ -1,0 +1,282 @@
+secret:
+  jwt:
+    anonKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE
+    serviceKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q
+    secret: your-super-secret-jwt-token-with-at-least-32-characters-long
+  smtp:
+    username: your-mail@example.com
+    password: example123456
+  dashboard:
+    username: supabase
+    password: this_password_is_insecure_and_should_be_updated
+    openAiApiKey: ""
+  db:
+    password: your-super-secret-db-password
+    database: postgres
+  analytics:
+    publicAccessToken: your-super-secret-and-long-logflare-key-public
+    privateAccessToken: your-super-secret-and-long-logflare-key-private
+  realtime:
+    secretKeyBase: UpNVntn3cDxHJpq99YMc1T1AQgQpc8kfYTuRgBiYa15BLrx8etQoXz3gZv1/u2oq
+  meta:
+    cryptoKey: "your-super-secret-and-long-crypto-key"
+
+db:
+  enabled: true
+  image:
+    tag: 15.8.1.085
+  livenessProbe:
+    exec:
+      command:
+        - pg_isready
+        - -U
+        - postgres
+    initialDelaySeconds: 3
+  persistence:
+    enabled: true
+    storageClassName: "managed-csi"
+    size: 10Gi
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "2Gi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+studio:
+  image:
+    tag: 2025.11.10-sha-5291fe3
+  environment:
+    DEFAULT_ORGANIZATION_NAME: TalentSphere
+    DEFAULT_PROJECT_NAME: TalentSphere Test
+    SUPABASE_PUBLIC_URL: http://talentsphere-test.example.com
+    NEXT_PUBLIC_ENABLE_LOGS: "true"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+auth:
+  image:
+    tag: v2.182.1
+  environment:
+    API_EXTERNAL_URL: http://talentsphere-test.example.com
+    GOTRUE_SITE_URL: http://talentsphere-test.example.com
+    GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+    GOTRUE_MAILER_AUTOCONFIRM: "true"
+    GOTRUE_SMTP_ADMIN_EMAIL: "your-mail@example.com"
+    GOTRUE_SMTP_HOST: "smtp.example.com"
+    GOTRUE_SMTP_PORT: "587"
+    GOTRUE_SMTP_SENDER_NAME: "TalentSphere"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+rest:
+  image:
+    tag: v13.0.7
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+realtime:
+  image:
+    tag: v2.63.0
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 4000
+    initialDelaySeconds: 3
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+meta:
+  image:
+    tag: v0.93.1
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+storage:
+  image:
+    tag: v1.29.0
+  livenessProbe:
+    httpGet:
+      path: /status
+      port: 5000
+    initialDelaySeconds: 3
+  persistence:
+    enabled: true
+    storageClassName: "managed-csi"
+    size: 10Gi
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+imgproxy:
+  image:
+    tag: v3.8.0
+  environment:
+    IMGPROXY_ENABLE_WEBP_DETECTION: "true"
+  livenessProbe:
+    exec:
+      command:
+        - imgproxy
+        - health
+    initialDelaySeconds: 3
+  persistence:
+    enabled: true
+    storageClassName: "managed-csi"
+    size: 5Gi
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+kong:
+  image:
+    repository: kong
+    tag: 2.8.1
+  environment:
+    KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+    KONG_LOG_LEVEL: info
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    tls: []
+    hosts:
+      - host: talentsphere-test.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+analytics:
+  image:
+    tag: 1.22.6
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 4000
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+vector:
+  image:
+    tag: 0.28.1-alpine
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 9001
+    initialDelaySeconds: 3
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false
+
+functions:
+  image:
+    tag: v1.68.4
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  nodeSelector:
+    kubernetes.azure.com/agentpool: userpool
+  autoscaling:
+    enabled: false

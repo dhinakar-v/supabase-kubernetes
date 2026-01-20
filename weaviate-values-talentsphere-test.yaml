@@ -1,0 +1,57 @@
+image:
+  registry: cr.weaviate.io
+  repo: semitechnologies/weaviate
+  tag: 1.33.3
+
+replicas: 1
+
+env:
+  QUERY_DEFAULTS_LIMIT: 20
+  AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: true
+  PERSISTENCE_DATA_PATH: /var/lib/weaviate
+  DEFAULT_VECTORIZER_MODULE: text2vec-transformers
+  ENABLE_MODULES: text2vec-transformers
+  TRANSFORMERS_INFERENCE_API: http://weaviate-text2vec-transformers:8080
+  RAFT_ENABLE_FQDN_RESOLVER: "true"
+  RAFT_FQDN_RESOLVER_TLD: weaviate-headless.talentsphere-test.svc.cluster.local
+
+modules:
+  text2vec-transformers:
+    enabled: true
+    tag: sentence-transformers-all-mpnet-base-v2
+    repo: semitechnologies/transformers-inference
+    registry: cr.weaviate.io
+    envconfig:
+      enable_cuda: false
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "2Gi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+
+storage:
+  size: 32Gi
+  storageClassName: managed-csi
+
+service:
+  name: weaviate
+  type: ClusterIP
+  port: 80
+
+grpcService:
+  enabled: true
+  type: ClusterIP
+  port: 50051
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "2000m"
+    memory: "4Gi"
+
+nodeSelector:
+  kubernetes.azure.com/agentpool: userpool
